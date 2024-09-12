@@ -14,6 +14,7 @@ export class PriorityQueue {
         break;
       }
     }
+    //mozna dodac jakies binary search tree zeby działało szybciej ale przy takiej ilosci nodow raczej useless, a kod sie skomplikuje bardziej
 
     if (!added) {
       this.items.push(queueElement);

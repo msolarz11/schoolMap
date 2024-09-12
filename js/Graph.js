@@ -14,7 +14,7 @@ export class Graph {
     const endNode = this.nodes.get(end);
     if (startNode && endNode) {
       startNode.addNeighbor(endNode, weight);
-      endNode.addNeighbor(startNode, weight); // Bidirectional edge
+      endNode.addNeighbor(startNode, weight);
     }
   }
 }

@@ -1,10 +1,9 @@
 import { Graph } from "./Graph.js";
 import { PriorityQueue } from "./PriorityQueue.js";
-import { GraphNode } from "./GraphNode.js";
 
 function aStar(graph, start, goal) {
   function heuristic(nodeA, nodeB) {
-    return 0;
+    return 0; //potrzebne koordynaty miejsc żeby obliczyc  hCost
   }
 
   let openList = new PriorityQueue();
@@ -117,13 +116,11 @@ const locations = [
 ];
 
 locations.forEach((location) => {
-  // Create option for startSelect
   let startOption = document.createElement("option");
   startOption.value = location;
   startOption.textContent = location;
   document.querySelector(".startSelect").appendChild(startOption);
 
-  // Create option for goalSelect
   let goalOption = document.createElement("option");
   goalOption.value = location;
   goalOption.textContent = location;
