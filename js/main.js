@@ -1,9 +1,25 @@
 import { Graph } from "./Graph.js";
 import { PriorityQueue } from "./PriorityQueue.js";
 
+const map = L.map("map", {
+  zoomControl: false,
+  scrollWheelZoom: false,
+  doubleClickZoom: false,
+  boxZoom: false,
+  touchZoom: false,
+  dragging: false,
+}).setView([0.5, 0.5], 1);
+
+const imageBounds = [
+  [0, 0],
+  [1, 1],
+];
+
+L.imageOverlay("./img/warsztaty_2.png", imageBounds).addTo(map);
+
 function aStar(graph, start, goal) {
   function heuristic(nodeA, nodeB) {
-    return 0; //potrzebne koordynaty miejsc żeby obliczyc  hCost
+    return 0;
   }
 
   let openList = new PriorityQueue();
@@ -95,48 +111,73 @@ schoolGraph.addEdge("Schody_2", "Klasa_514", 3);
 schoolGraph.addEdge("Klasa_514", "Klasa_515", 7);
 
 const locations = [
-  "Klasa_501",
-  "Klasa_502",
-  "Klasa_503",
-  "Klasa_504",
-  "Klasa_505",
-  "Klasa_506",
-  "Klasa_507",
-  "Klasa_508",
-  "Klasa_509",
-  "Klasa_510",
-  "Klasa_511",
-  "Klasa_512",
-  "Klasa_513",
-  "Klasa_514",
-  "Klasa_515",
-  "Magazyn",
-  "Schody_1",
-  "Schody_2",
+  { name: "Klasa_501", loc: [0.68, 0.175] },
+  { name: "Klasa_502", loc: [0.725, 0.175] },
+  { name: "Klasa_503", loc: [0.795, 0.175] },
+  { name: "Klasa_504", loc: [0.795, 0.585] },
+  { name: "Schody_1", loc: [0.795, 0.695] },
+  { name: "Klasa_505", loc: [0.795, 0.825] },
+  { name: "Klasa_506", loc: [0.635, 0.825] },
+  { name: "Klasa_507", loc: [0.54, 0.825] },
+  { name: "Klasa_508", loc: [0.475, 0.825] },
+  { name: "Klasa_509", loc: [0.36, 0.825] },
+  { name: "Klasa_510", loc: [0.215, 0.825] },
+  { name: "Klasa_511", loc: [0.215, 0.675] },
+  { name: "Klasa_512", loc: [0.215, 0.41] },
+  { name: "Klasa_513", loc: [0.215, 0.255] },
+  { name: "Schody_2", loc: [0.215, 0.235] },
+  { name: "Klasa_514", loc: [0.215, 0.175] },
+  { name: "Klasa_515", loc: [0.365, 0.175] },
 ];
-
+let polyline = null;
 locations.forEach((location) => {
   let startOption = document.createElement("option");
-  startOption.value = location;
-  startOption.textContent = location;
+  startOption.value = location.name;
+  startOption.textContent = location.name;
   document.querySelector(".startSelect").appendChild(startOption);
 
   let goalOption = document.createElement("option");
-  goalOption.value = location;
-  goalOption.textContent = location;
+  goalOption.value = location.name;
+  goalOption.textContent = location.name;
   document.querySelector(".goalSelect").appendChild(goalOption);
 });
 
+const initialZoom = 1;
+
 document.querySelector(".pathButton").addEventListener("click", () => {
-  let container = document.querySelector(".choose");
-  container.append();
-  let startNode = schoolGraph.nodes.get(
-    document.querySelector(".startSelect").value
-  );
-  let goalNode = schoolGraph.nodes.get(
-    document.querySelector(".goalSelect").value
-  );
+  let startNodeName = document.querySelector(".startSelect").value;
+  let goalNodeName = document.querySelector(".goalSelect").value;
+
+  let startNode = schoolGraph.nodes.get(startNodeName);
+  let goalNode = schoolGraph.nodes.get(goalNodeName);
   let path = aStar(schoolGraph, startNode, goalNode);
-  document.querySelector(".res").innerHTML = path;
+
+  document.querySelector(".res").innerHTML = path.join(" → ");
+
   console.log(path);
+
+  const pathLocations = locations.filter((item) => path.includes(item.name));
+  const pathCoords = pathLocations.map((item) => item.loc);
+
+  if (polyline) {
+    map.removeLayer(polyline);
+  }
+
+  polyline = L.polyline(pathCoords, {
+    color: "blue",
+    weight: 4,
+    opacity: 0.7,
+    smoothFactor: 1,
+  }).addTo(map);
+
+
+  const currentCenter = map.getCenter();
+  const currentZoom = map.getZoom();
+  setTimeout(() => {
+    map.setView(initialCenter, initialZoom, {
+      animate: false,
+    });
+  }, 100);
 });
+
+map.fitBounds(imageBounds);
