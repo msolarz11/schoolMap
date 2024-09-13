@@ -1,6 +1,7 @@
 import { Graph } from "./Graph.js";
 import { PriorityQueue } from "./PriorityQueue.js";
 
+
 const map = L.map("map", {
   zoomControl: false,
   scrollWheelZoom: false,
@@ -142,6 +143,7 @@ locations.forEach((location) => {
   document.querySelector(".goalSelect").appendChild(goalOption);
 });
 
+
 const initialZoom = 1;
 
 document.querySelector(".pathButton").addEventListener("click", () => {
@@ -162,6 +164,20 @@ document.querySelector(".pathButton").addEventListener("click", () => {
   if (polyline) {
     map.removeLayer(polyline);
   }
+
+  // polyline = antPath(pathCoords, {
+  //   "delay": 400,
+  //   "dashArray": [
+  //     10,
+  //     20
+  //   ],
+  //   "weight": 5,
+  //   "color": "#0000FF",
+  //   "pulseColor": "#FFFFFF",
+  //   "paused": false,
+  //   "reverse": false,
+  //   "hardwareAccelerated": true
+  // }).addTo(map);
 
   polyline = L.polyline(pathCoords, {
     color: "blue",
